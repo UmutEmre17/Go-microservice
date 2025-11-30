@@ -1,0 +1,21 @@
+# Binaries
+bin/
+*.exe
+*.out
+
+# Go build cache
+/go-build/
+
+# IDE Files
+.idea/
+.vscode/
+*.swp
+
+# Vendor folder
+/vendor/
+
+# Logs
+*.log
+
+# Env files
+.env
