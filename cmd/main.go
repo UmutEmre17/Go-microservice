@@ -9,7 +9,7 @@ import (
 func main() {
 	config.ConnectDB()
 
-	config.DB.AutoMigrate(&models.User{})
+	config.DB.AutoMigrate(&models.User{}, &models.SmsLog{})
 
 	r := routes.SetupRouter()
 	r.Run(":8000")
