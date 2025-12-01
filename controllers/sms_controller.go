@@ -8,6 +8,17 @@ import (
 	"sms-api-go/services"
 )
 
+// SendSms godoc
+// @Summary Send SMS
+// @Description Sends an SMS and logs it to the database
+// @Tags SMS
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer Token"
+// @Param request body models.SmsRequest true "SMS data"
+// @Success 200 {object} models.SmsResponse
+// @Failure 400 {object} map[string]string
+// @Router /send-sms [post]
 func SendSms(c *gin.Context) {
 	var body models.SmsRequest
 
