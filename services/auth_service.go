@@ -2,10 +2,10 @@ package services
 
 import (
 	"errors"
-	"strings"
 	"golang.org/x/crypto/bcrypt"
 	"sms-api-go/repositories"
 	"sms-api-go/utils"
+	"sms-api-go/models"
 )
 
 type authService struct{}
@@ -13,14 +13,10 @@ type authService struct{}
 var AuthService = authService{}
 
 func (s authService) Login(email, password string) (string, error) {
+
 	user := repositories.UserRepo.FindByEmail(email)
 	if user == nil {
 		return "", errors.New("invalid email or password")
-	}
-
-	if !strings.HasPrefix(user.Password, "$2a$") {
-		hashed, _ := bcrypt.GenerateFromPassword([]byte(user.Password), 12)
-		user.Password = string(hashed)
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
@@ -33,4 +29,22 @@ func (s authService) Login(email, password string) (string, error) {
 	}
 
 	return token, nil
+}
+
+func (s authService) Register(req models.RegisterRequest) error {
+
+	existing := repositories.UserRepo.FindByEmail(req.Email)
+	if existing != nil {
+		return errors.New("email already exists")
+	}
+
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), 12)
+
+	user := models.User{
+		Name:     req.Name,
+		Email:    req.Email,
+		Password: string(hashedPassword),
+	}
+
+	return repositories.UserRepo.Create(&user)
 }

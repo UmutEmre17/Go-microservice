@@ -19,6 +19,7 @@ func SetupRouter() *gin.Engine {
 
 	// Public route
 	r.POST("/login", controllers.Login)
+	r.POST("/register", controllers.Register)
 
 	// Protected routes
 	authGroup := r.Group("/")

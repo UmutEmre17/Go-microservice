@@ -2,27 +2,24 @@ package repositories
 
 import (
 	"sms-api-go/models"
-) 
+	"sms-api-go/config"
+)
 
-type userRepo struct {
-	users []models.User
-}
+type userRepository struct{}
 
-var UserRepo = userRepo {
-	users: []models.User{
-		{
-		Email: "test@example.com",
-		Password: "password",
-		Name: "Test User",
-		},
-	},
-}
+var UserRepo = userRepository{}
 
-func (r userRepo) FindByEmail(email string) *models.User {
-	for i := range r.users {
-		if r.users[i].Email == email {
-			return &r.users[i]
-		}
+func (r userRepository) FindByEmail(email string) *models.User {
+	var user models.User
+
+	result := config.DB.Where("email = ?", email).First(&user)
+	if result.Error != nil {
+		return nil
 	}
-	return nil
+
+	return &user
+}
+
+func (r userRepository) Create(user *models.User) error {
+	return config.DB.Create(user).Error
 }

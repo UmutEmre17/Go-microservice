@@ -7,6 +7,25 @@ import (
 	"sms-api-go/services"
 )
 
+func Register(c *gin.Context) {
+	var req models.RegisterRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := services.AuthService.Register(req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "user created successfully",
+	})
+}
+
 func Login(c *gin.Context) {
 	var req models.LoginRequest
 
