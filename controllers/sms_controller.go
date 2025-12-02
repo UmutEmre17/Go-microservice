@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"sms-api-go/models"
+	"sms-api-go/config"
 	"sms-api-go/services"
 )
 
@@ -29,4 +29,16 @@ func SendSms(c *gin.Context) {
 
 	result := services.SmsService.Send(body)
 	c.JSON(http.StatusOK, result)
+}
+
+func GetSmsLogs(c *gin.Context) {
+	var logs []models.SmsLog
+	result := config.DB.Order("created_at DESC").Find(&logs)
+
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not fetch logs"})
+		return
+	}
+
+	c.JSON(http.StatusOK, logs)
 }

@@ -40,6 +40,7 @@ func SetupRouter() *gin.Engine {
 	authGroup.Use(middlewares.AuthMiddleware())
 	{
 		authGroup.POST("/send-sms", controllers.SendSms)
+		authGroup.GET("/sms/logs", controllers.GetSmsLogs)
 	}
 
 	return r
